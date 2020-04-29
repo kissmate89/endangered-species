@@ -12,16 +12,22 @@ const SpeciesList = () => {
   const [species, setSpecies] = useState(null);
   const [filteredClasses, setFilteredClasses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [randomRegion, setRandomRegion] = useState(null);
   const [regionData] = useFetch(`${BASE_URL}/region/list`);
 
   useEffect(() => {
-    if (!species && regionData.results) {
-      setIsLoading(true);
-
-      const randomRegion =
+    if (regionData.results) {
+      setRandomRegion(
         regionData.results[
           Math.floor(Math.random() * regionData.results.length)
-        ];
+        ]
+      );
+    }
+  }, [regionData]);
+
+  useEffect(() => {
+    if (!species && randomRegion) {
+      setIsLoading(true);
 
       const fetchSpecies = async () => {
         try {
@@ -47,7 +53,17 @@ const SpeciesList = () => {
       };
       fetchSpecies();
     }
-  }, [regionData, species]);
+  }, [randomRegion, species]);
+
+  useEffect(() => {
+    if (species) {
+      setFilteredClasses(
+        species.filter((item) =>
+          SPECIES_CLASSES.some((keys) => keys === item.class_name)
+        )
+      );
+    }
+  }, [species]);
 
   if (isLoading) {
     return <p>Data is loading...</p>;
@@ -70,7 +86,10 @@ const SpeciesList = () => {
 
       {species && (
         <div>
-          <h2>Critically Endangered Species</h2>
+          <h2>
+            Critically Endangered Species{" "}
+            {randomRegion && `- ${randomRegion.name}`}
+          </h2>
           {species.map((item) => (
             <Species key={item.scientific_name} name={item.scientific_name} />
           ))}
