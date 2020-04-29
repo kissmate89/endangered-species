@@ -14,7 +14,9 @@ const miniCssExtractPlugin = new MiniCssExtractPlugin({
   chunkFilename: "[id].[hash].css",
 });
 
-const dotenvPlugin = new Dotenv();
+const dotenvPlugin = new Dotenv({
+  systemvars: true,
+});
 
 module.exports = {
   module: {
