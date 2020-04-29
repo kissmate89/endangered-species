@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useInView } from "react-intersection-observer";
 
 import { BASE_URL } from "../../constants";
-import { useFetch } from "../../utils/hooks";
 
 const concatanateResult = (result) =>
   result.reduce(
@@ -11,19 +11,44 @@ const concatanateResult = (result) =>
   );
 
 const Species = ({ name }) => {
-  const [data, isLoading, error] = useFetch(
-    `${BASE_URL}/measures/species/name/${name}`
-  );
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+  });
+
+  const [data, setData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchUrl = async () => {
+    try {
+      const response = await fetch(
+        `${BASE_URL}/measures/species/name/${name}?token=${process.env.IUCN_TOKEN}`
+      );
+      const json = await response.json();
+
+      setData(json);
+    } catch (err) {
+      setError(err);
+    }
+
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    if (!data && inView) {
+      fetchUrl();
+    }
+  }, [inView]);
 
   return (
-    <div>
+    <div ref={ref}>
       <h4>{name}</h4>
       {isLoading ? (
-        <p>isLoading...</p>
+        <p>Loading...</p>
       ) : (
         <p>{data && data.result && concatanateResult(data.result)}</p>
       )}
-      {!isLoading && error && <p>error</p>}
+      {!isLoading && error && <p>{error}</p>}
     </div>
   );
 };
