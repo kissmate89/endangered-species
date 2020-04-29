@@ -1,5 +1,7 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const Dotenv = require("dotenv-webpack");
+
 const path = require("path");
 
 const htmlPlugin = new HtmlWebPackPlugin({
@@ -11,6 +13,8 @@ const miniCssExtractPlugin = new MiniCssExtractPlugin({
   filename: "[name].[hash].css",
   chunkFilename: "[id].[hash].css",
 });
+
+const dotenvPlugin = new Dotenv();
 
 module.exports = {
   module: {
@@ -53,5 +57,5 @@ module.exports = {
       },
     ],
   },
-  plugins: [htmlPlugin, miniCssExtractPlugin],
+  plugins: [htmlPlugin, miniCssExtractPlugin, dotenvPlugin],
 };
