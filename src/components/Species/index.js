@@ -1,42 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 
-import { BASE_URL } from "../../constants";
-
-const concatanateResult = (result) =>
-  result.reduce(
-    (acc, curr, idx) =>
-      acc + `${curr.title}${idx + 1 < result.length ? ", " : ""}`,
-    ""
-  );
+import { concatanateResult, fetchData } from "../../utils";
 
 const Species = ({ name }) => {
   const [ref, inView] = useInView({
     triggerOnce: true,
   });
 
-  const [data, setData] = useState(null);
+  const [conservationMeasures, setConservationMeasures] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  const fetchUrl = async () => {
-    try {
-      const response = await fetch(
-        `${BASE_URL}/measures/species/name/${name}?token=${process.env.IUCN_TOKEN}`
-      );
-      const json = await response.json();
+  const fetchConservationMeasures = async () => {
+    const response = await fetchData(`/measures/species/name/${name}`);
 
-      setData(json);
-    } catch (err) {
-      setError(err);
-    }
-
+    setConservationMeasures(response);
     setIsLoading(false);
   };
 
   useEffect(() => {
-    if (!data && inView) {
-      fetchUrl();
+    if (!conservationMeasures && inView) {
+      fetchConservationMeasures();
     }
   }, [inView]);
 
@@ -46,9 +30,12 @@ const Species = ({ name }) => {
       {isLoading ? (
         <p>Loading...</p>
       ) : (
-        <p>{data && data.result && concatanateResult(data.result)}</p>
+        <p>
+          {conservationMeasures &&
+            conservationMeasures.result &&
+            concatanateResult(conservationMeasures.result, "title")}
+        </p>
       )}
-      {!isLoading && error && <p>{error}</p>}
     </div>
   );
 };

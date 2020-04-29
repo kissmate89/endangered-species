@@ -1,63 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 
-import { BASE_URL } from "../../constants";
-import { useFetch } from "../../utils/hooks";
+import { fetchData } from "../../utils";
 
+import ClassFilteredSpeciesList from "../ClassFilteredSpeciesList";
 import Species from "../Species";
 
 const FILTER_KEYS = ["CR"];
-const SPECIES_CLASSES = ["MAMMALIA"];
 
-const SpeciesList = () => {
+const SpeciesList = ({ region }) => {
   const [species, setSpecies] = useState(null);
-  const [filteredClasses, setFilteredClasses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [randomRegion, setRandomRegion] = useState(null);
-  const [regionData] = useFetch(`${BASE_URL}/region/list`);
+
+  const fetchSpecies = async () => {
+    const response = await fetchData(
+      // `/species/region/${region.identifier}/page/0`
+      "/species/region/europe/page/0"
+    );
+
+    const filteredSpecies = response.result.filter((item) =>
+      FILTER_KEYS.some((keys) => keys === item.category)
+    );
+
+    setSpecies(filteredSpecies);
+    setIsLoading(false);
+  };
 
   useEffect(() => {
-    if (regionData.results) {
-      setRandomRegion(
-        regionData.results[
-          Math.floor(Math.random() * regionData.results.length)
-        ]
-      );
-    }
-  }, [regionData]);
-
-  useEffect(() => {
-    if (!species && randomRegion) {
-      setIsLoading(true);
-
-      const fetchSpecies = async () => {
-        try {
-          const response = await fetch(
-            `${BASE_URL}/species/region/${randomRegion.identifier}/page/0?token=${process.env.IUCN_TOKEN}`
-          );
-          const data = await response.json();
-          const filteredSpecies = data.result.filter((item) =>
-            FILTER_KEYS.some((keys) => keys === item.category)
-          );
-
-          setSpecies(filteredSpecies);
-        } catch (err) {
-          console.error(err);
-        }
-        setIsLoading(false);
-      };
+    if (!species && region) {
       fetchSpecies();
     }
-  }, [randomRegion, species]);
-
-  useEffect(() => {
-    if (species) {
-      setFilteredClasses(
-        species.filter((item) =>
-          SPECIES_CLASSES.some((keys) => keys === item.class_name)
-        )
-      );
-    }
-  }, [species]);
+  }, [region, species]);
 
   if (isLoading) {
     return <p>Data is loading...</p>;
@@ -68,28 +40,18 @@ const SpeciesList = () => {
   }
 
   return (
-    <>
-      {filteredClasses.length > 0 && (
-        <div>
-          <h2>Species of {SPECIES_CLASSES}</h2>
-          {filteredClasses.map((item) => (
-            <p key={item.scientific_name}>{item.scientific_name}</p>
-          ))}
-        </div>
-      )}
+    <Fragment>
+      <ClassFilteredSpeciesList species={species} />
 
       {species && (
-        <div>
-          <h2>
-            Critically Endangered Species{" "}
-            {randomRegion && `- ${randomRegion.name}`}
-          </h2>
+        <Fragment>
+          <h2>Critically Endangered Species {region && `- ${region.name}`}</h2>
           {species.map((item) => (
             <Species key={item.scientific_name} name={item.scientific_name} />
           ))}
-        </div>
+        </Fragment>
       )}
-    </>
+    </Fragment>
   );
 };
 
