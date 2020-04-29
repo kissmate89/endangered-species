@@ -39,12 +39,6 @@ const SpeciesList = () => {
             FILTER_KEYS.some((keys) => keys === item.category)
           );
 
-          setFilteredClasses(
-            filteredSpecies.filter((item) =>
-              SPECIES_CLASSES.some((keys) => keys === item.class_name)
-            )
-          );
-
           setSpecies(filteredSpecies);
         } catch (err) {
           console.error(err);

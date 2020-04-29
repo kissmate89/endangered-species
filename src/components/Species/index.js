@@ -12,8 +12,6 @@ const concatanateResult = (result) =>
 
 const Species = ({ name }) => {
   const [ref, inView] = useInView({
-    /* Optional options */
-    threshold: 0,
     triggerOnce: true,
   });
 
