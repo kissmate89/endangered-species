@@ -10,7 +10,7 @@ export const concatanateResult = (result, property) =>
 export const fetchData = async (url) => {
   try {
     const response = await fetch(
-      `${BASE_URL}${url}?token=${process.env.REACT_APP_IUCN_TOKEN}`
+      `${BASE_URL}${url}?token=${process.env.IUCN_TOKEN}`
     );
     const data = await response.json();
 
