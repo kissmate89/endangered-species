@@ -3,6 +3,8 @@ import { useInView } from "react-intersection-observer";
 
 import { concatanateResult, fetchData } from "../../utils";
 
+import styles from "./species.scss";
+
 const Species = ({ name }) => {
   const [ref, inView] = useInView({
     triggerOnce: true,
@@ -25,7 +27,7 @@ const Species = ({ name }) => {
   }, [inView]);
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className={styles.speciesWrapper}>
       <h4>{name}</h4>
       {isLoading ? (
         <p>Loading...</p>

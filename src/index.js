@@ -35,7 +35,7 @@ const App = () => {
   }, [regions]);
 
   return (
-    <Suspense fallback={<p>Loading...</p>}>
+    <Suspense fallback={<p className="suspenseLoading">Loading...</p>}>
       <Header />
       <main className="main">
         {isLoading ? <p>Loading...</p> : <SpeciesList region={randomRegion} />}

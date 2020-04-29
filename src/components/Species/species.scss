@@ -1,0 +1,13 @@
+@import "../../assets/styles/variables.scss";
+
+.speciesWrapper {
+  max-width: 500px;
+  margin: 10px auto;
+  padding: 5px;
+  border: 1px solid #bb3b0e;
+  border-radius: $borderRadius;
+
+  h4 {
+    margin-top: 5px;
+  }
+}

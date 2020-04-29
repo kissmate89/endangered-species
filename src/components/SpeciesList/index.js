@@ -13,8 +13,7 @@ const SpeciesList = ({ region }) => {
 
   const fetchSpecies = async () => {
     const response = await fetchData(
-      // `/species/region/${region.identifier}/page/0`
-      "/species/region/europe/page/0"
+      `/species/region/${region.identifier}/page/0`
     );
 
     const filteredSpecies = response.result.filter((item) =>
