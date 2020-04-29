@@ -10,9 +10,9 @@ const concatanateResult = (result) =>
     ""
   );
 
-const Species = ({ name, taxonid }) => {
+const Species = ({ name }) => {
   const [data, isLoading, error] = useFetch(
-    `${BASE_URL}/measures/species/id/${taxonid}`
+    `${BASE_URL}/measures/species/name/${name}`
   );
 
   return (
@@ -21,7 +21,7 @@ const Species = ({ name, taxonid }) => {
       {isLoading ? (
         <p>isLoading...</p>
       ) : (
-        <p>{data && concatanateResult(data.result)}</p>
+        <p>{data && data.result && concatanateResult(data.result)}</p>
       )}
       {!isLoading && error && <p>error</p>}
     </div>

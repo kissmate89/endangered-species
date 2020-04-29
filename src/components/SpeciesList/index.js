@@ -11,7 +11,7 @@ const SPECIES_CLASSES = ["MAMMALIA"];
 const SpeciesList = () => {
   const [species, setSpecies] = useState(null);
   const [filteredClasses, setFilteredClasses] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [regionData] = useFetch(`${BASE_URL}/region/list`);
 
   useEffect(() => {
@@ -72,11 +72,7 @@ const SpeciesList = () => {
         <div>
           <h2>Critically Endangered Species</h2>
           {species.map((item) => (
-            <Species
-              key={item.scientific_name}
-              name={item.scientific_name}
-              taxonid={item.taxonid}
-            />
+            <Species key={item.scientific_name} name={item.scientific_name} />
           ))}
         </div>
       )}
