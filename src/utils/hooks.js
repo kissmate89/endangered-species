@@ -7,7 +7,7 @@ const useFetch = (url) => {
 
   const fetchUrl = async () => {
     try {
-      const response = await fetch(url);
+      const response = await fetch(url + `?token=${process.env.IUCN_TOKEN}`);
       const json = await response.json();
 
       setData(json);

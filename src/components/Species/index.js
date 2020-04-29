@@ -12,12 +12,12 @@ const concatanateResult = (result) =>
 
 const Species = ({ name, taxonid }) => {
   const [data, isLoading, error] = useFetch(
-    `${BASE_URL}/measures/species/id/${taxonid}?token=${process.env.IUCN_TOKEN}`
+    `${BASE_URL}/measures/species/id/${taxonid}`
   );
 
   return (
     <div>
-      <h3>{name}</h3>
+      <h4>{name}</h4>
       {isLoading ? (
         <p>isLoading...</p>
       ) : (
